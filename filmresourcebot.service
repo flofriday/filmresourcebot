@@ -1,0 +1,14 @@
+[Unit]
+Description=filmresourcebot Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/filmresourcebot
+Type=simple
+User=pi
+Environment="PROD=1"
+ExecStart=/usr/bin/python3 /home/pi/filmresourcebot/main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
