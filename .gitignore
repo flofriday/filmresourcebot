@@ -1,3 +1,5 @@
-__pycache__
-
+# The production config
 config.json
+
+# The python cache
+__pycache__
