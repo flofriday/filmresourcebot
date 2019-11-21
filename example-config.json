@@ -1,9 +1,12 @@
 {
     "telegram_token": "telegramtoken-to-use-in-production-(optional)",
     "telegram_token_dev": "telegramtoken-to-use-for-dev-(default)",
+    "telegram_admin_user": "Your-telegram-user-id",
 
     "reddit_client_id": "The-reddit-bot-id",
     "reddit_client_secret": "The-reddit-bot-secret",
     "reddit_username": "Your-user-name",
-    "reddit_password": "Your-user-password"
+    "reddit_password": "Your-user-password",
+
+    "db_path": "data.db"
 }

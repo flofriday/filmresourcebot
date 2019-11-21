@@ -1,5 +1,8 @@
 # The production config
 config.json
 
+# The production database
+data.db
+
 # The python cache
 __pycache__
