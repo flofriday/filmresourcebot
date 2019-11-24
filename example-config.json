@@ -8,5 +8,8 @@
     "reddit_username": "Your-user-name",
     "reddit_password": "Your-user-password",
 
+    "usplash_access_key": "The-unsplash.com-access-key",
+    "usplash_secret_key": "The-unsplash.com-secret-key",
+
     "db_path": "data.db"
 }

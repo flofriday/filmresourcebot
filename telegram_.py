@@ -47,14 +47,34 @@ def ideas(update, context):
             print(f"Unable to send photo{picture} to telegram: {str(e)}")
 
 def search(update, context):
-    send_answer(update, context, 
-    "This command is currently not implemented, sorry")
-    pass
+    # Exit if there is no search query
+    if len(context.args) == 0:
+        send_answer(update, context, 
+        "Hey you also need to tell me what you want to serach for, example: \n`/search Vienna`")
+        return
+
+    send_answer(update, context, "Finding the best images for you ...")
+    query = " ".join(context.args).strip()
+
+    try:
+        pictures = photos.get_search_photos(query)
+    except Exception as e:
+        print("Error loading the search images:" + str(e))
+        send_answer(update, context, 
+        "Sorry, but there was an error when I tried to find your images: " + str(e))
+
+    for picture in pictures:
+        caption = f"[{picture.name}]({picture.source_url})"
+        try:
+            context.bot.send_photo(chat_id=update.effective_chat.id,
+            photo=picture.url, parse_mode="Markdown", caption=caption)
+        except Exception as e:
+            print(f"Unable to send photo{picture} to telegram: {str(e)}")
+
 
 def resources(update, context):
-    message = open("Resources.md")
-    context.bot.send_message(chat_id=update.effective_chat.id,
-    text=message)
+    message = open("./Resources.md").read()
+    send_answer(update, context, message)
 
 def suggestion(update, context):
     user_message = " ".join(context.args).strip()

@@ -1,7 +1,9 @@
 import random
 import praw
+import requests
 
 reddit = None
+unsplash_access_key = None
 
 def __init__(config):
     global reddit
@@ -10,6 +12,9 @@ def __init__(config):
     password=config["reddit_password"],
     user_agent='Photobot',
     username=config["reddit_username"])
+
+    global unsplash_access_key
+    unsplash_access_key = config["usplash_access_key"]
 
 class Photo:
     """A simple class for storring, URLs of photos and where they came from"""
@@ -69,3 +74,16 @@ def get_inspiration_photos(number=5):
 
     return photos
 
+def get_search_photos(query):
+    response = requests.get("https://api.unsplash.com/search/photos",
+    params={"query": query, "client_id": unsplash_access_key, "per_page": "5"})
+
+    data = response.json()
+    photos = []
+    for result in data["results"]:
+        photo = Photo(url=result["urls"]["regular"], 
+        name = "Unsplash.com",
+        source_url=result["links"]["html"])
+        photos.append(photo)
+    
+    return photos
