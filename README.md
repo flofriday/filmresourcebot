@@ -1,4 +1,4 @@
-# filmresource bot
+# Filmresourcebot
 A simple bot to get ispiration & resources in the field of photography and film.
 [Try it on Telegram](https://t.me/filmresoucrebot)
 ![Screenshot](screenshot.png)
