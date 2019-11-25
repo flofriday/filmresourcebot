@@ -123,6 +123,7 @@ def about(update, context):
     send_answer(update, context, dedent(message))
 
 def admin_suggestions(update, context):
+    # Stop unprviledged users
     if str(update.effective_user.id) != admin_user:
         print(update.effective_user.id)
         # One could only know this exists from reading this line 
@@ -134,12 +135,15 @@ def admin_suggestions(update, context):
     except Exception as e:
         print(f"Exception: {str(e)}")
         send_answer(update, context, "Unable to load the suggestions")
+        return
 
-
-    if len(suggestions) > 0:
+    # Check if there are even suggestions
+    if len(suggestions) == 0:
         send_answer(update, context, "No new suggestions.")
+        return
 
-    message = f"{len(suggestions)} new suggestions:"
+    # Send all of the suggestions
+    message = f"{len(suggestions)} new suggestion(s):\n"
     message += "Platform | User | Suggestion"
     for n, suggestion in enumerate(suggestions):
         user_name = suggestion[0]
