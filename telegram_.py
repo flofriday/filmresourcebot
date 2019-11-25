@@ -90,7 +90,7 @@ def suggestion(update, context):
 
     # Add the suggestion to the database
     try:
-        database.add_suggestion(update.effective_user.id, "telegram", user_message)
+        database.add_suggestion(update.effective_user.username, "telegram", user_message)
     except Exception as e:
         print(f"Exception: {str(e)}")
         send_answer(update, context, 
@@ -113,16 +113,15 @@ def help(update, context):
 
 def about(update, context):
     message = """
-    Hi, I am [flofriday](https://github.com/flofriday) wrote this bot for a 
-    friend, who is a photographer. This bot is open source and on 
-    [github](https://github.com/flofriday/filmresourcebot).
+    Hi, I am [flofriday](https://github.com/flofriday) and wrote this bot for a 
+    friend, who is a photographer. This bot is being developed in python and is 
+    open source on [github](https://github.com/flofriday/filmresourcebot).
 
     If you have any suggestions, you can use /suggestion or create a issue on 
     github. 
     """ 
     send_answer(update, context, dedent(message))
 
-# TODO: this should only be possible by the admin user 
 def admin_suggestions(update, context):
     if str(update.effective_user.id) != admin_user:
         print(update.effective_user.id)
@@ -136,15 +135,20 @@ def admin_suggestions(update, context):
         print(f"Exception: {str(e)}")
         send_answer(update, context, "Unable to load the suggestions")
 
-    message = f"{len(suggestions)} new Suggestions"
-    for suggestion in suggestions:
-        user_id = suggestion[0]
+
+    if len(suggestions) > 0:
+        send_answer(update, context, "No new suggestions.")
+
+    message = f"{len(suggestions)} new suggestions:"
+    message += "Platform | User | Suggestion"
+    for n, suggestion in enumerate(suggestions):
+        user_name = suggestion[0]
         platform = suggestion[1]
         text = helpers.escape_markdown(suggestion[2])
         if (platform == "telegram"):
-            message += f"\n[Telegram User](tg://user?{user_id}); {text}" 
+            message += f"\n**{n+1}:** {platform} | @{user_name} | {text}" 
         else:
-            message += f"\n{platform}; {user_id}; {text}" 
+            message += f"\n**{n+1}:** {platform} | {user_name} | {text}" 
         
     send_answer(update, context, message)
     
@@ -184,6 +188,7 @@ def run(config):
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(CommandHandler("about", about))
 
+    dispatcher.add_handler(CommandHandler("admin", admin_help))
     dispatcher.add_handler(CommandHandler("adminhelp", admin_help))
     dispatcher.add_handler(CommandHandler("adminsuggestions", admin_suggestions))
 
