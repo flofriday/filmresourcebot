@@ -19,9 +19,27 @@ You need to have pyhton3 installed on your system.
 ### Deployment
 I deploy the bot on a raspberry pi, and so this repository has some specific 
 files for that. Here are the steps I take to deploy the bot:
-1. Create a folder on the pi `mkdir /home/pi/filmresourcebot`
-2. Copy the files to the bot `scp ./* -r pi@192.168.8.164:/home/pi/filmresourcebot`
-3. On the pi run `bash /home/pi/filmresourcebot/pi-deploy.sh`
+
+```bash
+# 1. Install all dependencies (you only need to do this once)
+ssh pi@192.168.8.164 "sudo apt install python3-pip -y && pip3 install praw python-telegram-bot requests && mkdir /home/pi/filmresourcebot"
+
+# TIPP: If you have access to a bash shell and sshpass installed you can run 
+# pi-deploy.sh instead of manually the entering the commands below
+
+# 2. Stop the current bot
+ssh pi@192.168.8.164 "sudo systemctl stop filmresourcebot"
+
+# 3. Copy the files to the rapsberry pi
+scp ./* -r pi@192.168.8.164:/home/pi/filmresourcebot
+
+# 4. Start the new bot
+ssh pi@192.168.8.164 "sudo cp filmresourcebot/filmresourcebot.service /etc/systemd/system/filmresourcebot.service\
+sudo systemctl daemon-reload\
+sudo systemctl enable filmresourcebot\
+sudo systemctl start filmresourcebot"
+
+```
 
 ## Contribute
 Honestly, I am not a photographer, I just build this service for a friend. So if
