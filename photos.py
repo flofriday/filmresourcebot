@@ -19,10 +19,12 @@ def __init__(config):
 class Photo:
     """A simple class for storring, URLs of photos and where they came from"""
 
-    def __init__(self, url, name, source_url):
+    def __init__(self, url, name, source_url, creator="", creator_url=""):
         self.name = name
         self.url = url
         self.source_url = source_url
+        self.creator = creator
+        self.creator_url = creator_url
 
     def __repr__(self):
         return "<Photo url:%s name:%s source_url:%s>" % (self.url, self.name,
@@ -82,8 +84,16 @@ def get_search_photos(query):
     photos = []
     for result in data["results"]:
         photo = Photo(url=result["urls"]["regular"], 
-        name = "Unsplash.com",
-        source_url=result["links"]["html"])
+        name = result["description"],
+        source_url = result["links"]["html"],
+        creator = result["user"]["name"],
+        creator_url = result["user"]["links"]["html"],
+        )
+
+        # Set to empty text if there is no description
+        if photo.name == None:
+            photo.name="Photo"
+
         photos.append(photo)
     
     return photos
