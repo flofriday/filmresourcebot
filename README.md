@@ -31,7 +31,7 @@ ssh pi@192.168.8.164 "sudo apt install python3-pip -y && pip3 install praw pytho
 ssh pi@192.168.8.164 "sudo systemctl stop filmresourcebot"
 
 # 3. Copy the files to the rapsberry pi
-scp ./* -r pi@192.168.8.164:/home/pi/filmresourcebot
+scp *.py *.json *.md *.sh *.service -r pi@192.168.8.164:/home/pi/filmresourcebot
 
 # 4. Start the new bot
 ssh pi@192.168.8.164 "sudo cp filmresourcebot/filmresourcebot.service /etc/systemd/system/filmresourcebot.service\

@@ -12,7 +12,7 @@ echo "Stopping the old bot ..."
 sshpass -p $Password ssh $Remote "sudo systemctl stop filmresourcebot"
 
 echo "Uploading the new bot ..."
-sshpass -p $Password scp $PWD/* $Remote:/home/pi/filmresourcebot
+sshpass -p $Password scp *.py *.json *.md *.sh *.service $Remote:/home/pi/filmresourcebot
 
 echo "Updating the the service file and reloading the systemd deamon ..."
 sshpass -p $Password ssh $Remote "sudo cp filmresourcebot/filmresourcebot.service /etc/systemd/system/filmresourcebot.service; \
