@@ -94,6 +94,9 @@ def get_search_photos(query):
         if photo.name == None:
             photo.name="Photo"
 
+        if len(photo.name) > 25:
+            photo.name = photo.name[:22] + "..."
+
         photos.append(photo)
     
     return photos
