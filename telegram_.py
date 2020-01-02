@@ -102,14 +102,22 @@ def search(update, context):
         send_text(
             update,
             context,
-            "Hey you also need to tell me what you want to serach for,"
-            + " example: \n`/search Vienna`",
+            dedent(
+                """
+            Hey you also need to tell me what you want to serach, for example:
+            `/search Vienna`
+
+            Note: You can now also omit the command and just write `Vienna`
+            """
+            ),
         )
         return
 
+    # Tell telegram that we gonna upload images, and it may take a while
     send_action(update, context, ChatAction.UPLOAD_PHOTO)
     query = " ".join(context.args).strip()
 
+    # Get the images
     try:
         pictures = photos.get_search_photos(query)
     except Exception as e:
@@ -119,6 +127,14 @@ def search(update, context):
             context,
             "Sorry, but there was an error when I tried to find your images: "
             + str(e),
+        )
+
+    # Check if we got anything
+    if len(pictures) == 0:
+        send_text(
+            update,
+            context,
+            f"Sorry, but I couldn't find any images for '{query}'. 😔",
         )
 
     # Send all pictures
@@ -340,7 +356,6 @@ def unknownText(update, context):
         text=f"Do you want to search for '{text}' images ?",
         parse_mode="Markdown",
         disable_web_page_preview=True,
-        # reply_to_message_id=update.message.message_id,
         reply_markup=telegram.InlineKeyboardMarkup(
             [
                 [
