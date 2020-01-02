@@ -39,10 +39,23 @@ class Photo:
         )
 
 
-def get_subreddits_photos(subreddits):
+def get_subreddits_photos(number=3):
+    # All interesting subreddits
+    subreddits = [
+        "analog",
+        "architecture",
+        "earthporn",
+        "itookapicture",
+        "natureporn",
+        "photographs",
+        "portraisphotos",
+        "portraits",
+        "portraitsporn",
+    ]
+
     # Combine all subreddits to one string
     subreddits_combined = "+".join(subreddits)
-    posts = reddit.subreddit(subreddits_combined).hot(limit=128)
+    posts = reddit.subreddit(subreddits_combined).hot(limit=64)
 
     # Filter the posts
     photos = []
@@ -58,36 +71,73 @@ def get_subreddits_photos(subreddits):
         # Add the photo to the list
         photo = Photo(
             post.url,
-            post.subreddit.display_name,
+            post.subreddit.display_name.capitalize(),
             "https://reddit.com" + post.permalink,
+            post.author.name.replace("\\", "").lower(),
+            "https://reddit.com/u/" + post.author.name + "/posts",
         )
+        photos.append(photo)
+
+    # Shorten the list if it is longer than expected
+    if len(photos) > number:
+        random.shuffle(photos)
+        photos = photos[:number]
+
+    return photos
+
+
+def get_random_unsplash_photos(number=3):
+    response = requests.get(
+        "https://api.unsplash.com/photos",
+        params={
+            "client_id": unsplash_access_key,
+            # "featured": "true",
+            # "count": number,
+            "page": random.randint(1, 15),
+            "per_page": number,
+        },
+    )
+
+    data = response.json()
+
+    # Convert the data to photos
+    photos = []
+    for result in data:
+        photo = Photo(
+            url=result["urls"]["regular"],
+            name=result["description"],
+            source_url=result["links"]["html"],
+            creator=result["user"]["name"],
+            creator_url=result["user"]["links"]["html"],
+        )
+
+        # Set to empty text if there is no description
+        if photo.name is None:
+            photo.name = "Photo"
+
+        if len(photo.name) > 25:
+            photo.name = photo.name[:22] + "..."
+
         photos.append(photo)
 
     return photos
 
 
-def get_inspiration_photos(number=5):
-    subreddits = [
-        "analog",
-        "architecture",
-        "earthporn",
-        "itookapicture",
-        "natureporn",
-        "photographs",
-        "portraisphotos",
-        "portraits",
-        "portraitsporn",
-    ]
-
+def get_inspiration_photos(number=6):
     print("Load inspiration images ...")
-    photos = get_subreddits_photos(subreddits)
-    print(f"Got {len(photos)} images")
 
-    # If there are more images found than requested, shorten that list
-    if len(photos) > number:
-        random.shuffle(photos)
-        photos = photos[0:number]
+    # Calculate how many images of each kind
+    reddit_number = int(number / 2)
+    unsplash_number = number - reddit_number
 
+    # Load the images
+    photos = get_subreddits_photos(reddit_number)
+    print(f"Got {len(photos)} reddit images")
+    photos += get_random_unsplash_photos(unsplash_number)
+    print(f"Got {len(photos)} unsplash images")
+
+    # Shuffle the images and return them
+    random.shuffle(photos)
     return photos
 
 
