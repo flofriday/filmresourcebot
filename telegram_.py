@@ -3,7 +3,13 @@ from textwrap import dedent
 
 import telegram
 from telegram import ChatAction
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext import (
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+    CallbackQueryHandler,
+)
 from telegram.utils import helpers
 
 import database
@@ -125,7 +131,7 @@ def search(update, context):
                 [
                     [
                         telegram.InlineKeyboardButton(
-                            f"More {query} images on Unsplash", url=url
+                            f"More '{query}' images on Unsplash", url=url
                         )
                     ]
                 ]
@@ -307,12 +313,43 @@ def admin_help(update, context):
     send_text(update, context, dedent(message))
 
 
+def button(update, context):
+    """Handle inline buttons that are not just urls"""
+    word_list = update.callback_query.data.split(" ")
+    command = word_list[0]
+    args = word_list[1:]
+    if command == "/search":
+        context.args = args
+        search(update, context)
+
+
 def unknown(update, context):
     send_text(
         update,
         context,
         "Sorry I didn't understand that."
         + " Try /help to see what I can understand.",
+    )
+
+
+def unknownText(update, context):
+    """Ask the user if they want to search for imaages matching the text"""
+    text = update.message.text
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"Do you want to search for '{text}' images ?",
+        parse_mode="Markdown",
+        disable_web_page_preview=True,
+        # reply_to_message_id=update.message.message_id,
+        reply_markup=telegram.InlineKeyboardMarkup(
+            [
+                [
+                    telegram.InlineKeyboardButton(
+                        text=f"Search", callback_data=f"/search {text}"
+                    )
+                ]
+            ]
+        ),
     )
 
 
@@ -352,8 +389,14 @@ def run(config):
         CommandHandler("adminsuggestions", admin_suggestions)
     )
 
+    # Handle buttons (only the ones that interact witth the bot)
+    dispatcher.add_handler(CallbackQueryHandler(button))
+
+    # Handle unknown commands
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-    dispatcher.add_handler(MessageHandler(Filters.text, unknown))
+
+    # Handle unkown text
+    dispatcher.add_handler(MessageHandler(Filters.text, unknownText))
 
     # Handle all errors
     dispatcher.add_error_handler(error)
