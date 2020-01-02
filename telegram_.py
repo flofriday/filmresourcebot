@@ -190,7 +190,7 @@ def statistics(update, context):
     increase_interaction(update)
 
     users, total_interactions, interactions = database.get_statistic(
-        update.effective_user.id
+        update.effective_user.id, "telegram"
     )
     message = f"Users: {users}\n"
     message += f"Total Served Interactions: {total_interactions}\n"
@@ -218,27 +218,28 @@ def privacy(update, context):
     increase_interaction(update)
     message = """
     *--- Privacy ---*
-    Hi, I am [flofriday](https://github.com/flofriday), the creator of this
+    Hi, I am [flofriday](https://github.com/flofriday), creator of this
     bot. Unfortunately, this bot saves some userdata. However, I promise that
     I will *never sell* this *data* to anybody. Moreover, I promise you that
-    I will never use any userdata to enrich myself in anyway.
+    I will never use any userdata to gain an unfair advantage or enrich myself
+    in any way.
 
     *-- So why do you even collect any data? --*
     First, some functionality is not possible without any userdata. For
     example the email-less suggestion feature. Also I want to know whats
-    going on my bot therefore I created the /statistics command. I promise
+    going on my bot, therefore I created the /statistics command. I promise
     that every analytics tool for this bot will be available to all users, so
-    everybody knows as much as I do.
+    every user knows as much as I do.
 
     *-- What exactly do you collect? --*
-    Since the first time you used the bot I saved your telegram id with a 
-    counter of how many interactions you had with the bot. I do not save what
-    you wrote the bot, what you received from the bot nor when you wrote the
-    bot. Also I promise that I will never use those ids to contact you
-    personally (I am not even sure if that would be possible). In the case
-    you write a suggestion I will save your telegram username along the
+    Since the first time you used the bot I saved your telegram id with a
+    counter of how many interactions you had with the bot. I however, do not
+    save what you wrote the bot, what you received from the bot nor when you
+    wrote the bot. Also I promise that I will never use those ids to contact
+    you personally (I am not even sure if that would be possible). In the case
+    you write a suggestion I will save your telegram username together with the
     suggestion text. With that I can (and in rare cases might) contact you to
-    discuss your suggestion. 
+    discuss your suggestion.
     """
     send_text(update, context, dedent(message))
 
@@ -246,12 +247,13 @@ def privacy(update, context):
 def about(update, context):
     increase_interaction(update)
     message = """
-    Hi, I am [flofriday](https://github.com/flofriday) and wrote this bot for a 
-    friend, who is a photographer. This bot is being developed in python and is 
-    open source on [github](https://github.com/flofriday/filmresourcebot).
+    Hi, this bot is written in python
+    by me ([flofriday](https://github.com/flofriday)
+    and the code is open source available on
+    [github](https://github.com/flofriday/filmresourcebot).
 
-    If you have any suggestions, you can use /suggestion or create a issue on 
-    github. 
+    If you have any suggestions, you can use /suggestion or create a issue on
+    github.
     """
     send_text(update, context, dedent(message))
 

@@ -14,12 +14,12 @@ def __init__(config):
 
     # Create all necesarry tables
     c.execute(
-        """CREATE TABLE IF NOT EXISTS users
-             (user_id text, platform text, interactions integer)"""
+        "CREATE TABLE IF NOT EXISTS users "
+        + "(user_id text, platform text, interactions integer)"
     )
     c.execute(
-        """CREATE TABLE IF NOT EXISTS suggestions
-             (user_id text, platform text, suggestion text)"""
+        "CREATE TABLE IF NOT EXISTS suggestions "
+        + "(user_id text, platform text, suggestion text)"
     )
     conn.commit()
     conn.close()
@@ -52,7 +52,7 @@ def increase_interaction(user_id, platform):
         add_user(user_id, platform)
 
 
-def get_statistic(user_id):
+def get_statistic(user_id, platform):
     """Returns 3 values, the number of users, the total interactions and"""
     """the number of interactions of the asking user"""
     conn = sqlite3.connect(db_path)
@@ -61,7 +61,9 @@ def get_statistic(user_id):
     total_interactions = c.execute("SELECT SUM(interactions) FROM users")
     total_interactions = total_interactions.fetchone()[0]
     interactions = c.execute(
-        "SELECT SUM(interactions) FROM users WHERE user_id = ?", (user_id,)
+        "SELECT SUM(interactions) FROM users "
+        + "WHERE user_id = ? AND platform = ?",
+        (user_id, platform),
     ).fetchone()[0]
     print(interactions)
 
@@ -84,7 +86,7 @@ def add_suggestion(user, platform, suggestion):
 
 
 def get_and_clear_suggestions():
-    """Returns all suggestion and also deletes the table"""
+    """Returns all suggestion and delete them from the database"""
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     suggestions = c.execute("SELECT * FROM suggestions").fetchall()

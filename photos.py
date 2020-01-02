@@ -25,8 +25,8 @@ class Photo:
     """A simple class for storring, URLs of photos and where they came from"""
 
     def __init__(self, url, name, source_url, creator="", creator_url=""):
-        self.name = name
         self.url = url
+        self.name = name
         self.source_url = source_url
         self.creator = creator
         self.creator_url = creator_url
