@@ -21,6 +21,7 @@ I deploy the bot on a raspberry pi, and so this repository has some specific
 files for that. Here are the steps I take to deploy the bot:
 
 ```bash
+# Replace 192.168.8.164 with the IP address of your pi
 # 1. Install all dependencies (you only need to do this once)
 ssh pi@192.168.8.164 "sudo apt install python3-pip -y && pip3 install praw python-telegram-bot requests && mkdir /home/pi/filmresourcebot"
 
