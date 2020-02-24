@@ -1,0 +1,21 @@
+stages:
+  - build
+  - deploy
+
+compile:
+  stage: build
+  script: docker build -t filmresourcebot-template .
+    
+run:
+  stage: deploy
+  script:
+    - echo -e "docker stop filmresourcebot-container\nexit 0" | bash
+    - echo -e "docker rm filmresourcebot-container\nexit 0" | bash
+    - >
+      docker run -d --restart unless-stopped
+      --mount type=volume,source=filmresourcebot-volume,target=/app/data
+      --name filmresourcebot-container filmresourcebot-template
+  environment:
+    name: production
+  only: 
+    - master
