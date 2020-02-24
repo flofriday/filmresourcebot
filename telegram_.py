@@ -15,6 +15,7 @@ from telegram.utils import helpers
 import database
 import photos
 
+# Globals
 admin_user = None
 
 

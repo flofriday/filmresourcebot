@@ -1,0 +1,11 @@
+__pycache__
+.dockerignore
+.gitignore
+data.db
+Dockerfile
+filmresourcebot.service
+LICENSE
+OLD-pi-deploy.sh
+README.md
+Resource.md
+screenshot.png

@@ -10,11 +10,17 @@ At the moment this bot is only available on
 [Telegram](https://t.me/filmresoucrebot). However, I plan on supporting more
 plattforms in the future like Signal, or Discord.
 
-## Build & Run yourself
+## Run the bot
 You need to have pyhton3 installed on your system.
 1. `pip3 install praw python-telegram-bot requests`
 2. Rename `example-config.json` to `config.json` and enter your account settings.
 3. `python3 main.py`
+
+## Run the bot with Docker
+```
+docker build -t filmresourcebot-template .
+docker run --rm --name filmresourcebot-container filmresourcebot-template
+```
 
 ### Deployment
 I deploy the bot on a raspberry pi, and so this repository has some specific 

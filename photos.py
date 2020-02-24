@@ -91,8 +91,6 @@ def get_random_unsplash_photos(number=3):
         "https://api.unsplash.com/photos",
         params={
             "client_id": unsplash_access_key,
-            # "featured": "true",
-            # "count": number,
             "page": random.randint(1, 15),
             "per_page": number,
         },
