@@ -4,13 +4,18 @@ stages:
 
 compile:
   stage: build
-  script: docker build -t filmresourcebot-template .
+  script: 
+    - cp $CONFIG config.json
+    - docker build -t filmresourcebot-template .
     
 run:
   stage: deploy
   script:
+    # Stop the old bot
     - echo -e "docker stop filmresourcebot-container\nexit 0" | bash
     - echo -e "docker rm filmresourcebot-container\nexit 0" | bash
+
+    # Start the bot
     - >
       docker run -d --restart unless-stopped
       --mount type=volume,source=filmresourcebot-volume,target=/app/data

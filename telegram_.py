@@ -380,9 +380,7 @@ def run(config):
     admin_user = config["telegram_admin_user"]
 
     # Configure the telegram client
-    token = config["telegram_token_dev"]
-    if os.environ.get("PROD") is not None:
-        token = config["telegram_token"]
+    token = config["telegram_token"]
     print(token)
 
     updater = Updater(token=token, use_context=True)
